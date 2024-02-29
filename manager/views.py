@@ -25,7 +25,6 @@ def managerLogin(request):
 		else:
 			return Response(request_data.errors)
 	
-	
 	if request.method == "GET":
 		logins = login.objects.all()
 		login_details = LoginSerializer(logins, many=True)

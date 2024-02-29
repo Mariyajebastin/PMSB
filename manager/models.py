@@ -22,6 +22,7 @@ class manager(models.Model):
 	designation = models.CharField(max_length=100)
 	email_id = models.CharField(max_length=50)
 	password = models.CharField(max_length=10)
+	profile_picture = models.ImageField(upload_to="portal_image", blank=False)
 	created_time = models.TimeField(auto_now=True)
 	created_date = models.DateField(auto_now=True)
 	
