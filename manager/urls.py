@@ -25,5 +25,6 @@ urlpatterns = [
     path('manager', createManager),
     path('employee', createEmployee),
     path('task', createTask),
+    path('task/<str:u_id>', createTask),
     path('announcement', createAnnouncement)
 ]

@@ -5,9 +5,9 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from manager.models import login, manager, employee, task, announcement
+from manager.models import login, manager, Employee, Task, announcement
 from manager.serializer import LoginSerializer, ManagerSerializer, EmployeeSerializer, TaskSerializer, \
-	AnnouncementSerializer
+	AnnouncementSerializer, TaskUpdateSerializer, TaskDeleteSerializer
 
 
 # Create your views here.
@@ -66,15 +66,20 @@ def createEmployee(request):
 			return Response(request_data.errors)
 	
 	if request.method == "GET":
-		employees = employee.objects.all()
+		employees = Employee.objects.all()
 		employee_details = EmployeeSerializer(employees, many=True)
 		return Response({
 			"message": employee_details.data
 		})
 
 
-@api_view(["POST", "GET"])
-def createTask(request):
+@api_view(["POST", "GET", "PUT","DELETE"])
+def createTask(request, u_id=None):
+	response_details = {
+		"status": False,
+		"status_code": 404,
+		"message": "Error happened while processing"
+	}
 	if request.method == "POST":
 		request_data = TaskSerializer(data=request.data)
 		if request_data.is_valid():
@@ -86,13 +91,60 @@ def createTask(request):
 			return Response(request_data.errors)
 	
 	if request.method == "GET":
-		tasks = task.objects.all()
+		tasks = Task.objects.all()
 		task_details = TaskSerializer(tasks, many=True)
 		return Response({
 			"message": task_details.data
 		})
 
+	if request.method == "PUT":
+		received_data = TaskUpdateSerializer(data=request.data)
+		print("from 97 ",request.data.get("id"))
+		# you are not passing value for id key from postman
+		# open table of task
+		# there is no database name db.sqlite3x
+		print("from 106 ",request.data)
+		if received_data.is_valid():
+			if Task.objects.filter(id=request.data.get("id")).exists():
+				tasks = Task.objects.get(id=request.data.get("id"))
+				tasks.task_name = received_data.validated_data.get('task_name')
+				tasks.task_brief = received_data.validated_data.get('task_brief')
+				tasks.date = received_data.validated_data.get('date')
+				tasks.priority = received_data.validated_data.get('priority')
+				# tasks.attach_file = received_data.validated_data.get('attach_file')
+				tasks.save()
+				# now start to test i'll check
+				response_details.update({
+					"status":True,
+					"status_code":200,
+					"message":"Data updated successfully !"
+				})
+			else:
+				response_details.update({
+					"message":"Id is not exists !"
+				})
+		else:
+			return JsonResponse({
+				"message": received_data.errors
+			})
+		
+	if request.method == "DELETE":
+		if u_id:
+			received_data = TaskDeleteSerializer(data={"id": u_id})
+			if received_data.is_valid():
+				Task.objects.filter(pk=received_data.validated_data.get('id')).delete()
+				return JsonResponse({
+					"message": "Data deleted successfully"
+				})
+			else:
+				return JsonResponse({
+					"message": "There is no Data"
+				})
+			
+	return Response(response_details)
 
+
+	
 @api_view(["POST", "GET"])
 def createAnnouncement (request):
 	if request.method == "POST":
