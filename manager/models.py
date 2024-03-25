@@ -52,6 +52,7 @@ class Employee(models.Model):
 		return self.employee_name
 
 # apply migration commands and check again
+
 class Task(models.Model):
 	task_name = models.CharField(max_length=100)
 	task_brief = models.CharField(max_length=5000)

@@ -35,11 +35,18 @@ def managerLogin(request):
 		
 @api_view(["POST", "GET"])
 def createManager(request):
+	response_details = {
+		"status": False,
+		"status_code": 404,
+		"message": "Error happened while processing"
+	}
 	if request.method == "POST":
 		request_data = ManagerSerializer(data=request.data)
 		if request_data.is_valid():
 			request_data.save()
-			return JsonResponse({
+			response_details.update({
+				"status": True,
+				"status_code": 200,
 				"message": "Data saved successfully"
 			})
 		else:
@@ -55,11 +62,18 @@ def createManager(request):
 
 @api_view(["POST", "GET"])
 def createEmployee(request):
+	response_details = {
+		"status": False,
+		"status_code": 404,
+		"message": "Error happened while processing"
+	}
 	if request.method == "POST":
 		request_data = EmployeeSerializer(data=request.data)
 		if request_data.is_valid():
 			request_data.save()
-			return JsonResponse({
+			response_details.update({
+				"status": True,
+				"status_code": 200,
 				"message": "Data saved successfully"
 			})
 		else:
@@ -84,7 +98,9 @@ def createTask(request, u_id=None):
 		request_data = TaskSerializer(data=request.data)
 		if request_data.is_valid():
 			request_data.save()
-			return JsonResponse({
+			response_details.update({
+				"status": True,
+				"status_code": 200,
 				"message": "Data saved successfully"
 			})
 		else:
@@ -100,9 +116,6 @@ def createTask(request, u_id=None):
 	if request.method == "PUT":
 		received_data = TaskUpdateSerializer(data=request.data)
 		print("from 97 ",request.data.get("id"))
-		# you are not passing value for id key from postman
-		# open table of task
-		# there is no database name db.sqlite3x
 		print("from 106 ",request.data)
 		if received_data.is_valid():
 			if Task.objects.filter(id=request.data.get("id")).exists():
@@ -115,9 +128,9 @@ def createTask(request, u_id=None):
 				tasks.save()
 				# now start to test i'll check
 				response_details.update({
-					"status":True,
-					"status_code":200,
-					"message":"Data updated successfully !"
+					"status": True,
+					"status_code": 200,
+					"message": "Data updated successfully !"
 				})
 			else:
 				response_details.update({
@@ -143,15 +156,21 @@ def createTask(request, u_id=None):
 			
 	return Response(response_details)
 
-
 	
 @api_view(["POST", "GET"])
 def createAnnouncement (request):
+	response_details = {
+		"status": False,
+		"status_code": 404,
+		"message": "Error happened while processing"
+	}
 	if request.method == "POST":
 		request_data = AnnouncementSerializer(data=request.data)
 		if request_data.is_valid():
 			request_data.save()
-			return JsonResponse({
+			response_details.update({
+				"status": True,
+				"status_code": 200,
 				"message": "Data saved successfully"
 			})
 		else:

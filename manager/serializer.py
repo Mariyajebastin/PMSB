@@ -25,7 +25,7 @@ class TaskSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Task
 		exclude = ["created_time", "created_date"]
-		# right click
+	
 		
 
 class TaskUpdateSerializer(serializers.ModelSerializer):
