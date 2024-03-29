@@ -132,3 +132,21 @@ import os
 
 MEDIA_URL = '/storages/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'storages')
+
+"""
+server {
+
+    listen 80;
+    server_name pms.uuksoftwares.in;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /opt/bitnami/projects/PMS;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/pms.sock;
+    }
+}
+"""
