@@ -137,7 +137,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'storages')
 server {
 
     listen 80;
-    server_name pms.uuksoftwares.in;
+    server_name pmsb.uuksoftwares.in;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
